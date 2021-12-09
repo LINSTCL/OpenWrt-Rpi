@@ -410,7 +410,7 @@ jobs:
           rm -rf packages
           df -hT $PWD
 
-      - name: Deploy Files To HostHatch Node
+      - name: Deploy Files To Tencent Cloud
         env:
           HOST: "${{ secrets.TENCENT_CLOUD_USER }}@${{ secrets.TENCENT_CLOUD_ADDRESS }}"
           SOURCE_TARGETS: "${{ env.OPENWRT_ROOT_PATH }}/bin/targets/${{ env.DEVICE_TARGET }}/${{ env.DEVICE_SUBTARGET }}/"
