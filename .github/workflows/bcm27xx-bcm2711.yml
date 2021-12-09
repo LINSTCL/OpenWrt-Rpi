@@ -343,6 +343,7 @@ jobs:
       - name: Compress Bin Folder
         run: |
           cd $OPENWRT_ROOT_PATH
+          mkdir bin
           zip -r $DEVICE_TARGET-$DEVICE_SUBTARGET.zip bin
 
       - name: Print Disk Usage
