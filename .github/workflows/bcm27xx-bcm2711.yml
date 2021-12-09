@@ -302,11 +302,11 @@ jobs:
         run: |
           cd $OPENWRT_ROOT_PATH
           echo -e "$(nproc) thread compile"
-#          make buildinfo
-#          make diffconfig buildversion feedsversion
-#          make target/compile -j$(nproc) || make target/compile -j1 V=s IGNORE_ERRORS=1
-#          make package/compile -j$(nproc) IGNORE_ERRORS=1 || make package/compile -j1 V=s IGNORE_ERRORS=1
-#          make package/index
+          make buildinfo
+          make diffconfig buildversion feedsversion
+          make target/compile -j$(nproc) || make target/compile -j1 V=s IGNORE_ERRORS=1
+          make package/compile -j$(nproc) IGNORE_ERRORS=1 || make package/compile -j1 V=s IGNORE_ERRORS=1
+          make package/index
 
       - name: Generate Firmware
         id: generate
@@ -343,7 +343,6 @@ jobs:
       - name: Compress Bin Folder
         run: |
           cd $OPENWRT_ROOT_PATH
-          mkdir bin
           zip -r $DEVICE_TARGET-$DEVICE_SUBTARGET.zip bin
 
       - name: Print Disk Usage
@@ -417,7 +416,7 @@ jobs:
           SOURCE_TARGETS: "${{ env.OPENWRT_ROOT_PATH }}/bin/targets/${{ env.DEVICE_TARGET }}/${{ env.DEVICE_SUBTARGET }}/"
           DEST_TARGETS: "${{ env.TENCENT_CLOUD_WEB_ROOT_PATH }}/openwrt/build/${{ env.DEVICE_TARGET }}/${{ env.DEVICE_SUBTARGET }}/"
           REMOTE_PRIVATEKEY: "${{ secrets.TENCENT_CLOUD_PRIVATEKEY }}"
-        if: env.REMOTE_PRIVATEKEY != null
+        if: $REMOTE_PRIVATEKEY != null
         run: |
           mkdir -p ~/.ssh/
           install -m 600 /dev/null ~/.ssh/id_rsa
