@@ -416,7 +416,7 @@ jobs:
           SOURCE_TARGETS: "${{ env.OPENWRT_ROOT_PATH }}/bin/targets/${{ env.DEVICE_TARGET }}/${{ env.DEVICE_SUBTARGET }}/"
           DEST_TARGETS: "${{ env.TENCENT_CLOUD_WEB_ROOT_PATH }}/openwrt/build/${{ env.DEVICE_TARGET }}/${{ env.DEVICE_SUBTARGET }}/"
           REMOTE_PRIVATEKEY: "${{ secrets.TENCENT_CLOUD_PRIVATEKEY }}"
-        if: $REMOTE_PRIVATEKEY != null
+        if: env.REMOTE_PRIVATEKEY != null
         run: |
           mkdir -p ~/.ssh/
           install -m 600 /dev/null ~/.ssh/id_rsa
@@ -425,6 +425,23 @@ jobs:
           ssh -q -t -i ~/.ssh/id_rsa -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $HOST \
           bash -c "'mkdir -p $TENCENT_CLOUD_WEB_ROOT_PATH/openwrt/build/$DEVICE_TARGET/$DEVICE_SUBTARGET'"
           rsync -chavP --delete -e 'ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no' $SOURCE_TARGETS $HOST:$DEST_TARGETS
+       
+      - name: Upload File To Huawei OBS
+        run: |
+          wget https://obs-community.obs.cn-north-1.myhuaweicloud.com/obsutil/current/obsutil_linux_amd64.tar.gz
+          echo "${{ secrets.TENCENT_CLOUD_USER }}"
+          echo "${{ secrets.TENCENT_CLOUD_ADDRESS }}"
+          echo "${{ secrets.PACIFICRACK_PRIVATEKEY }}"
+          tar zxvf obsutil_linux_amd64.tar.gz
+          cd obsutil_linux_amd64_*
+          ./obsutil config -i=1DOBMKAPMJ2YANMYXODU \
+          -k=fs4DCnq1dCtrDR7pFve17xDJA7Eco2yOmJUD5vwu \
+          -e=https://obs.cn-north-4.myhuaweicloud.com
+          chmod 777 obsutil
+          zip -q -r openwrt.zip $OPENWRT_ROOT_PATH/bin/targets/$DEVICE_TARGET/$DEVICE_SUBTARGET
+          ./obsutil cp \
+          ./openwrt.zip \
+          obs://linst-mc/openwrt.zip
 
 #      - name: Deploy Files To PacificRack Node
 #        env:
