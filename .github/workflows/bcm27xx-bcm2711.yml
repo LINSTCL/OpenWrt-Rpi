@@ -54,6 +54,9 @@ jobs:
           sudo ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
           docker image prune -a -f
           mkdir -p workspace
+          echo "${{ secrets.TENCENT_CLOUD_USER }}"
+          echo "${{ secrets.TENCENT_CLOUD_ADDRESS }}"
+          echo "${{ secrets.PACIFICRACK_PRIVATEKEY }}"
 
       - name: Checkout
         uses: actions/checkout@main
