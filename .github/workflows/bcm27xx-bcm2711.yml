@@ -24,7 +24,7 @@ env:
   CLASH_BINARY_PLATFORM: armv8
   TOOLCHAIN_RELEASE_UPLOAD: true
   FIRMWARE_RELEASE_UPLOAD: true
-  WEB_ROOT_PATH: /data/dnmp/www/openwrt.cc
+  WEB_ROOT_PATH: ${{ secrets.TENCENT_CLOUD_WEB_ROOT_PATH }}
   TZ: Asia/Shanghai
 
 jobs:
@@ -416,14 +416,14 @@ jobs:
           SOURCE_TARGETS: "${{ env.OPENWRT_ROOT_PATH }}/bin/targets/${{ env.DEVICE_TARGET }}/${{ env.DEVICE_SUBTARGET }}/"
           DEST_TARGETS: "${{ env.TENCENT_CLOUD_WEB_ROOT_PATH }}/openwrt/build/${{ env.DEVICE_TARGET }}/${{ env.DEVICE_SUBTARGET }}/"
           REMOTE_PRIVATEKEY: "${{ secrets.TENCENT_CLOUD_PRIVATEKEY }}"
-        if: env.REMOTE_PRIVATEKEY != null
+#        if: env.REMOTE_PRIVATEKEY != null
         run: |
           mkdir -p ~/.ssh/
           install -m 600 /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.TENCENT_CLOUD_PRIVATEKEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh -q -t -i ~/.ssh/id_rsa -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $HOST \
-          bash -c "'mkdir -p $TENCENT_CLOUD_WEB_ROOT_PATH/openwrt/build/$DEVICE_TARGET/$DEVICE_SUBTARGET'"
+          bash -c "'mkdir -p $WEB_ROOT_PATH/openwrt/build/$DEVICE_TARGET/$DEVICE_SUBTARGET'"
           rsync -chavP --delete -e 'ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no' $SOURCE_TARGETS $HOST:$DEST_TARGETS
        
       - name: Upload File To Huawei OBS
