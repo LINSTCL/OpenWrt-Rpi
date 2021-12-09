@@ -302,11 +302,11 @@ jobs:
         run: |
           cd $OPENWRT_ROOT_PATH
           echo -e "$(nproc) thread compile"
-          make buildinfo
-          make diffconfig buildversion feedsversion
-          make target/compile -j$(nproc) || make target/compile -j1 V=s IGNORE_ERRORS=1
-          make package/compile -j$(nproc) IGNORE_ERRORS=1 || make package/compile -j1 V=s IGNORE_ERRORS=1
-          make package/index
+#          make buildinfo
+#          make diffconfig buildversion feedsversion
+#          make target/compile -j$(nproc) || make target/compile -j1 V=s IGNORE_ERRORS=1
+#          make package/compile -j$(nproc) IGNORE_ERRORS=1 || make package/compile -j1 V=s IGNORE_ERRORS=1
+#          make package/index
 
       - name: Generate Firmware
         id: generate
