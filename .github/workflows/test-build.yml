@@ -25,6 +25,7 @@ env:
   TOOLCHAIN_RELEASE_UPLOAD: true
   FIRMWARE_RELEASE_UPLOAD: true
   TZ: Asia/Shanghai
+  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN }}
 
 jobs:
   Toolchain:
@@ -39,6 +40,7 @@ jobs:
       DEVICE_TARGET: ${{ steps.env.outputs.DEVICE_TARGET }}
       DEVICE_SUBTARGET: ${{ steps.env.outputs.DEVICE_SUBTARGET }}
       TOOLCHAIN_IMAGE: ${{ steps.env.outputs.TOOLCHAIN_IMAGE }}
+      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Initialization Environment
