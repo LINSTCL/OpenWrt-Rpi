@@ -1,0 +1,73 @@
+#=================================================
+# https://github.com/P3TERX/Actions-OpenWrt
+# Description: Build OpenWrt using GitHub Actions
+# Lisence: MIT
+# Author: P3TERX
+# Blog: https://p3terx.com
+#=================================================
+
+name: Build bcm27xx/bcm2711 openwrt
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 18 * * *
+  # watch:
+  #   types: started
+
+env:
+  CONFIG_FILE: config/bcm27xx/bcm2711.config
+  SOURCE_URL: https://github.com/immortalwrt/immortalwrt
+  SOURCE_BRANCH: openwrt-18.06-k5.4
+  DIY_SH: scripts/custom.sh
+  TOOLCHAIN_TAG: toolchain
+  CLASH_BINARY_PLATFORM: armv8
+  TOOLCHAIN_RELEASE_UPLOAD: true
+  FIRMWARE_RELEASE_UPLOAD: true
+  TZ: Asia/Shanghai
+
+jobs:
+  Toolchain:
+    runs-on: ubuntu-20.04
+
+    outputs:
+      OPENWRT_ROOT_PATH: ${{ steps.clone.outputs.OPENWRT_ROOT_PATH }}
+      CURRENT_BRANCH: ${{ steps.env.outputs.CURRENT_BRANCH }}
+      SOURCE_OWNER: ${{ steps.env.outputs.SOURCE_OWNER }}
+      SOURCE_REPO: ${{ steps.env.outputs.SOURCE_REPO }}
+      DEVICE_PLATFORM: ${{ steps.env.outputs.DEVICE_PLATFORM }}
+      DEVICE_TARGET: ${{ steps.env.outputs.DEVICE_TARGET }}
+      DEVICE_SUBTARGET: ${{ steps.env.outputs.DEVICE_SUBTARGET }}
+      TOOLCHAIN_IMAGE: ${{ steps.env.outputs.TOOLCHAIN_IMAGE }}
+
+    steps:
+      - name: Initialization Environment
+        env:
+          DEBIAN_FRONTEND: noninteractive
+          TENCENT_CLOUD_USER: ${{ secrets.TENCENT_CLOUD_USER }}
+          TENCENT_CLOUD_ADDRESS: ${{ secrets.TENCENT_CLOUD_ADDRESS }}
+          PACIFICRACK_PRIVATEKEY: ${{ secrets.PACIFICRACK_PRIVATEKEY }}
+        run: |
+          sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
+          sudo -E apt-get -qq update
+          sudo -E apt-get -qq install squashfs-tools $(curl -fsSL git.io/depends-ubuntu-2004)
+          sudo -E apt-get -qq autoremove --purge
+          sudo -E apt-get -qq clean
+          sudo ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+          docker image prune -a -f
+          mkdir -p workspace
+          echo "${{ secrets.TENCENT_CLOUD_USER }}"
+          echo "${{ secrets.TENCENT_CLOUD_ADDRESS }}"
+          echo "${{ secrets.PACIFICRACK_PRIVATEKEY }}"
+          echo "$TENCENT_CLOUD_USER"
+          echo "$TENCENT_CLOUD_ADDRESS"
+          echo "$PACIFICRACK_PRIVATEKEY"
+       
+      - name: Upload File To Huawei OBS
+        env:
+          WEB_ROOT_PATH: ${{ secrets.TENCENT_CLOUD_WEB_ROOT_PATH }}
+        run: |
+          echo $WEB_ROOT_PATH
+          echo "${{ secrets.TENCENT_CLOUD_USER }}"
+          echo "${{ secrets.TENCENT_CLOUD_ADDRESS }}"
+          echo "${{ secrets.PACIFICRACK_PRIVATEKEY }}"
