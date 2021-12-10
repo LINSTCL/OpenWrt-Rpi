@@ -26,6 +26,8 @@ env:
   FIRMWARE_RELEASE_UPLOAD: true
   TZ: Asia/Shanghai
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN }}
+  TENCENT_CLOUD_USER: ${{ secrets.TENCENT_CLOUD_USER }}
+  TENCENT_CLOUD_ADDRESS: ${{ secrets.TENCENT_CLOUD_ADDRESS }}
 
 jobs:
   Toolchain:
@@ -50,11 +52,6 @@ jobs:
           TENCENT_CLOUD_ADDRESS: ${{ secrets.TENCENT_CLOUD_ADDRESS }}
           PACIFICRACK_PRIVATEKEY: ${{ secrets.PACIFICRACK_PRIVATEKEY }}
         run: |
-          echo "$env.DEBIAN_FRONTEND"
-          echo "$env.TENCENT_CLOUD_USER"
-          echo "${{ secrets.TENCENT_CLOUD_USER }}"
-          echo "${{ secrets.TENCENT_CLOUD_ADDRESS }}"
-          echo "${{ secrets.PACIFICRACK_PRIVATEKEY }}"
           echo "$TENCENT_CLOUD_USER"
           echo "$TENCENT_CLOUD_ADDRESS"
           echo "$PACIFICRACK_PRIVATEKEY"
